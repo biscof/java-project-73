@@ -1,17 +1,8 @@
 spring:
   application:
     name: taskManager
-
-  datasource:
-    username: ""
-    password: ""
-    url: "jdbc:h2:./task-manager-app-db"
-
-  h2:
-    console:
-      enabled: true
-      # Path to open the h2 console in the browser
-      path: /h2console/
+#  profiles:
+#    active: dev
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
@@ -24,9 +15,3 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
-
-server:
-  error:
-    include-stacktrace: on_param
-    include-message: on_param

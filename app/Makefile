@@ -1,17 +1,18 @@
 #Makefile
 
 prepare:
-	gradle clean
-	gradle installDist
+	./gradlew clean installDist
 
 build:
-	gradle clean
-	gradle build
-	gradle test
-	gradle checkstyleMain
-	gradle checkstyleTest
+	./gradlew clean build test checkstyleMain checkstyleTest
 
 report:
-	gradle jacocoTestReport
+	./gradlew jacocoTestReport
+
+start:
+	./gradlew bootRun --args='--spring.profiles.active=dev'
+
+start-prod:
+	./gradlew bootRun --args='--spring.profiles.active=prod'
 
 .PHONY: build
