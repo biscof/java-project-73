@@ -5,10 +5,15 @@ plugins {
     id 'jacoco'
     id 'org.springframework.boot' version '3.1.1'
     id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.liquibase.gradle' version '2.2.0'
 }
 
 group = 'hexlet.code'
 version = '0.0.1-SNAPSHOT'
+
+application {
+    mainClass = 'hexlet.code.App'
+}
 
 java {
     sourceCompatibility = '17'
@@ -25,18 +30,38 @@ repositories {
 }
 
 dependencies {
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.liquibase:liquibase-core'
-//    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
+
+    implementation (
+            'org.springframework.boot:spring-boot-starter-thymeleaf',
+            'org.springframework.boot:spring-boot-starter-web',
+            'org.liquibase:liquibase-core',
+            'org.springframework.data:spring-data-jpa',
+            'org.springframework.boot:spring-boot-starter-data-jpa',
+            'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    )
+
+    liquibaseRuntime (
+            'org.liquibase:liquibase-core',
+            'info.picocli:picocli:4.7.1',
+            'org.liquibase.ext:liquibase-hibernate5:3.6',
+            sourceSets.main.output,
+
+            'org.springframework.boot:spring-boot-starter-data-jpa',
+            'com.h2database:h2'
+    )
+
+    runtimeOnly (
+            'com.h2database:h2',
+            'org.postgresql:postgresql'
+    )
+
+    testImplementation (
+            'org.springframework.boot:spring-boot-starter-test',
+            'org.springframework.security:spring-security-test'
+    )
 }
 
 test {
@@ -48,13 +73,34 @@ compileJava {
     options.encoding = 'UTF-8'
 }
 
-application {
-    mainClass = 'hexlet.code.App'
+// Enable liquibase to be up to date with changes in the models
+diffChangelog {
+    dependsOn compileJava
 }
 
+// Generate test coverage reports in the xml format
 jacocoTestReport {
     dependsOn test
     reports {
         xml.required = true
+    }
+}
+
+// Keep the spring data jpa version up to date
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.data:spring-data-bom:2023.0.2'
+    }
+}
+
+liquibase {
+    activities {
+        main {
+            changelogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
+            url 'jdbc:h2:file:./task-manager-app-db'
+            referenceUrl 'hibernate:spring:hexlet.code.model.' +
+                    '?dialect=org.hibernate.dialect.H2Dialect' +
+                    '&hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy'
+        }
     }
 }
