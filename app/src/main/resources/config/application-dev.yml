@@ -17,6 +17,8 @@ spring:
       enabled: true
       # Path to open the h2 console in the browser
       path: /h2console/
+      settings:
+        web-allow-others: true
 
 logging:
   level:
