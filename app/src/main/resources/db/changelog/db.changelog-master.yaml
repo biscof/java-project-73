@@ -22,6 +22,9 @@ databaseChangeLog:
               -  column:
                   name:  email
                   type:  varchar(255)
+              -  column:
+                  name: password
+                  type: varchar(255)
               - column:
                   name: created_at
                   type: timestamp
