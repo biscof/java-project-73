@@ -45,7 +45,7 @@ class UserControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Test
     void testGetAllUsers() throws Exception {
@@ -54,7 +54,7 @@ class UserControllerTest {
                 .andReturn()
                 .getResponse();
 
-        List<User> users = mapper.readValue(response.getContentAsString(), new TypeReference<>() {});
+        List<User> users = MAPPER.readValue(response.getContentAsString(), new TypeReference<>() { });
 
         assertEquals(200, response.getStatus());
         assertEquals(3, users.size());
@@ -72,7 +72,7 @@ class UserControllerTest {
                 .andReturn()
                 .getResponse();
 
-        User testUser = mapper.readValue(response.getContentAsString(), new TypeReference<>() {});
+        User testUser = MAPPER.readValue(response.getContentAsString(), new TypeReference<>() { });
 
         assertEquals(200, response.getStatus());
         assertEquals("smith@test.com", testUser.getEmail());
@@ -99,7 +99,7 @@ class UserControllerTest {
 
         mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDto)))
+                        .content(MAPPER.writeValueAsString(userDto)))
                 .andExpect(status().isCreated());
 
         User testUser = userRepository.findUserByEmail(userDto.getEmail());
@@ -117,7 +117,7 @@ class UserControllerTest {
 
         MockHttpServletResponse response = mockMvc.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDto)))
+                        .content(MAPPER.writeValueAsString(userDto)))
                 .andReturn()
                 .getResponse();
 
@@ -136,7 +136,7 @@ class UserControllerTest {
 
         mockMvc.perform(put("/api/users/" + user.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(userDto)))
+                .content(MAPPER.writeValueAsString(userDto)))
                 .andExpect(status().isOk());
 
         assertEquals("Yuri", user.getFirstName());
