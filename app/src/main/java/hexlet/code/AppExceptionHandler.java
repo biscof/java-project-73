@@ -1,8 +1,8 @@
 package hexlet.code;
 
 import hexlet.code.exception.InvalidDataException;
-import hexlet.code.model.ErrorResponse;
 import hexlet.code.exception.UserNotFoundException;
+import hexlet.code.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

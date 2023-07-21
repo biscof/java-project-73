@@ -5,8 +5,8 @@ server:
 
 spring:
   datasource:
-    username: ""
-    password: ""
+    username:
+    password:
     url: "jdbc:h2:./task-manager-app-db"
 
   jpa:

@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("No user found with ID " + id + ".")
+                () -> new UserNotFoundException(id)
         );
     }
 
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(Long id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException("User with ID " + id + " not found")
+                () -> new UserNotFoundException(id)
         );
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
         } else {
-            throw new UserNotFoundException("User with ID " + id + " not found");
+            throw new UserNotFoundException(id);
         }
     }
 }
