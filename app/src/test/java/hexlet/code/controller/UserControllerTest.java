@@ -65,7 +65,7 @@ class UserControllerTest {
 
     @Test
     void testGetUserByValidId() throws Exception {
-        User user = userRepository.findUserByEmail("smith@test.com");
+        User user = userRepository.findUserByEmail("smith@test.com").orElseThrow();
 
         MockHttpServletResponse response = mockMvc
                 .perform(get("/api/users/" + user.getId()))
@@ -102,7 +102,7 @@ class UserControllerTest {
                         .content(MAPPER.writeValueAsString(userDto)))
                 .andExpect(status().isCreated());
 
-        User testUser = userRepository.findUserByEmail(userDto.getEmail());
+        User testUser = userRepository.findUserByEmail(userDto.getEmail()).orElseThrow();
 
         assertNotNull(testUser);
         assertEquals("Johnson", testUser.getLastName());
@@ -128,7 +128,7 @@ class UserControllerTest {
 
     @Test
     void testUpdateUser() throws Exception {
-        User user = userRepository.findUserByEmail("petrov@test.com");
+        User user = userRepository.findUserByEmail("petrov@test.com").orElseThrow();
 
         UserDto userDto = new UserDto(
                 "Yuri", "Petrov", "yuri@test.com", "or&uuTyN<eC"
@@ -146,7 +146,7 @@ class UserControllerTest {
 
     @Test
     void testDeleteUser() throws Exception {
-        User user = userRepository.findUserByEmail("fisher@test.com");
+        User user = userRepository.findUserByEmail("fisher@test.com").orElseThrow();
 
         mockMvc.perform(delete("/api/users/" + user.getId()))
                 .andExpect(status().isOk());
