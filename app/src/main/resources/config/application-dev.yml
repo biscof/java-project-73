@@ -5,13 +5,14 @@ server:
 
 spring:
   datasource:
+    url: "jdbc:h2:./task-manager-app-db"
     username:
     password:
-    url: "jdbc:h2:./task-manager-app-db"
-
+    driver-class-name: org.h2.Driver
   jpa:
     show-sql: true
-
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console:
       enabled: true

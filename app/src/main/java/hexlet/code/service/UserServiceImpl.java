@@ -3,6 +3,7 @@ package hexlet.code.service;
 import hexlet.code.dto.UserDto;
 import hexlet.code.exception.UserNotFoundException;
 import hexlet.code.model.User;
+import hexlet.code.model.Role;
 import hexlet.code.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,11 +33,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserDto userDto) {
-        User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        User user = User.builder()
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .email(userDto.getEmail())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .role(Role.USER)
+                .build();
+
         userRepository.save(user);
         return user;
     }
