@@ -18,8 +18,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${token-secret}")
-    private String secretKey;
+    @Value("${JWT_SECRET}")
+    private String secret;
 
     private Claims getAllClaims(String token) {
         return Jwts
@@ -62,7 +62,7 @@ public class JwtService {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

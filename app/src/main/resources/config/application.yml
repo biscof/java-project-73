@@ -19,4 +19,4 @@ spring:
         enabled: true
 
 base-url: /api
-token-secret: ${TOKEN_SECRET}
+

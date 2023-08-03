@@ -15,6 +15,9 @@ version = '0.0.1-SNAPSHOT'
 
 application {
     mainClass = 'hexlet.code.App'
+    run {
+        environment 'JWT_SECRET', System.getenv('JWT_SECRET')
+    }
 }
 
 java {
