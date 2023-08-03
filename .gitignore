@@ -1,4 +1,8 @@
 app/HELP.md
+app/node
+app/fronetend/build
+app/frontend/node_modules
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
