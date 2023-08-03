@@ -3,14 +3,20 @@ users:
     first_name: John
     last_name: Smith
     email: smith@test.com
-    password: 123456789
+    password: $2a$10$8uB.wxOMwjbQWPtZj2vOGODdtPzHWmkcWMh4hUzW7YQSeVNMsvYb.
+#    password: 123456789
+    role: USER
   - created_at: 2023-07-19T16:14:26.144704
     first_name: Ivan
     last_name: Petrov
     email: petrov@test.com
-    password: 1qp578g
+    password: $2a$10$2rzM5e1Ndj1BAF8O9aRbLuH9kTI8bTpRB6kdABAov47IeOFHAarpa
+#    password: 1qp578g
+    role: USER
   - created_at: 2023-07-19T11:30:05.144704
     first_name: Hans
     last_name: Fischer
-    email: fisher@test.com
-    password: 346fhdnj346
+    email: fischer@test.com
+    password: $2a$10$aqLSjg5fvCImTPkDHifBe.Hj1YVbOBlH1Vjtg97Nu9PsA9aR7VrUa
+#    password: ry5H85dn
+    role: USER

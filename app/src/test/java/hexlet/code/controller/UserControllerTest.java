@@ -1,7 +1,5 @@
 package hexlet.code.controller;
 
-import java.util.List;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
@@ -10,6 +8,8 @@ import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.service.JwtService;
+import hexlet.code.service.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,11 +19,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,6 +42,12 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private UserRepository userRepository;
@@ -66,9 +73,11 @@ class UserControllerTest {
     @Test
     void testGetUserByValidId() throws Exception {
         User user = userRepository.findUserByEmail("smith@test.com").orElseThrow();
+        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("smith@test.com"));
 
         MockHttpServletResponse response = mockMvc
-                .perform(get("/api/users/" + user.getId()))
+                .perform(get("/api/users/" + user.getId())
+                        .header("Authorization", "Bearer " + jwt))
                 .andReturn()
                 .getResponse();
 
@@ -87,8 +96,7 @@ class UserControllerTest {
                 .andReturn()
                 .getResponse();
 
-        assertEquals(404, response.getStatus());
-        assertTrue(response.getContentAsString().contains("No user found with ID 9."));
+        assertEquals(403, response.getStatus());
     }
 
     @Test
@@ -129,14 +137,16 @@ class UserControllerTest {
     @Test
     void testUpdateUser() throws Exception {
         User user = userRepository.findUserByEmail("petrov@test.com").orElseThrow();
+        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("petrov@test.com"));
 
         UserDto userDto = new UserDto(
                 "Yuri", "Petrov", "yuri@test.com", "or&uuTyN<eC"
         );
 
         mockMvc.perform(put("/api/users/" + user.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(MAPPER.writeValueAsString(userDto)))
+                        .header("Authorization", "Bearer " + jwt)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(MAPPER.writeValueAsString(userDto)))
                 .andExpect(status().isOk());
 
         assertEquals("Yuri", user.getFirstName());
@@ -146,11 +156,13 @@ class UserControllerTest {
 
     @Test
     void testDeleteUser() throws Exception {
-        User user = userRepository.findUserByEmail("fisher@test.com").orElseThrow();
+        User user = userRepository.findUserByEmail("fischer@test.com").orElseThrow();
+        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("fischer@test.com"));
 
-        mockMvc.perform(delete("/api/users/" + user.getId()))
+        mockMvc.perform(delete("/api/users/" + user.getId())
+                        .header("Authorization", "Bearer " + jwt))
                 .andExpect(status().isOk());
 
-        assertNull(userRepository.findUserByEmail("fisher@test.com"));
+        assertTrue(userRepository.findUserByEmail("fischer@test.com").isEmpty());
     }
 }
