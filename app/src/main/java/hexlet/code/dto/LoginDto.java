@@ -1,4 +1,4 @@
-package hexlet.code.controller.auth;
+package hexlet.code.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class LoginDto {
 
-    private String firstName;
-    private String lastName;
     private String email;
     private String password;
 }

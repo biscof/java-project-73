@@ -21,7 +21,7 @@ public class JwtService {
     @Value("${token-secret}")
     private String secretKey;
 
-    private Claims extractAllClaims(String token) {
+    private Claims getAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -30,17 +30,17 @@ public class JwtService {
                 .getBody();
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
+    private <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return getClaim(token, Claims::getExpiration);
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return getClaim(token, Claims::getSubject);
     }
 
     public String generateToken(UserDetails userDetails) {

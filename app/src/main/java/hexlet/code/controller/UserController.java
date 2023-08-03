@@ -1,8 +1,8 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.UserDto;
+import hexlet.code.dto.UserResponseDto;
 import hexlet.code.exception.InvalidDataException;
-import hexlet.code.model.User;
 import hexlet.code.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -29,18 +29,18 @@ public class UserController {
     private UserServiceImpl userService;
 
     @GetMapping(path = "/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public UserResponseDto getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @GetMapping(path = "")
-    public List<User> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Validated @RequestBody UserDto userDto, BindingResult bindingResult) {
+    public UserResponseDto createUser(@Validated @RequestBody UserDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errorMessages = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}")
-    public User updateUser(
+    public UserResponseDto updateUser(
             @PathVariable Long id,
             @Validated @RequestBody UserDto userDto
     ) {

@@ -1,4 +1,4 @@
-package hexlet.code.config;
+package hexlet.code.filter;
 
 import hexlet.code.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -61,10 +61,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 } else {
-                    response.sendError(401, "Invalid token provided.");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 }
             } catch (UsernameNotFoundException e) {
-                response.sendError(401, "User not found.");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
         }
         // Pass the request to the next filter:

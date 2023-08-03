@@ -1,6 +1,7 @@
 package hexlet.code.service;
 
 import hexlet.code.dto.UserDto;
+import hexlet.code.dto.UserResponseDto;
 import hexlet.code.exception.UserNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.model.Role;
@@ -20,19 +21,23 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(
+    public UserResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(id)
         );
+        return convertUserToDto(userRepository.save(user));
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return (List<User>) userRepository.findAll();
+    public List<UserResponseDto> getAllUsers() {
+        List<User> users = (List<User>) userRepository.findAll();
+        return users.stream()
+                .map(UserServiceImpl::convertUserToDto)
+                .toList();
     }
 
     @Override
-    public User createUser(UserDto userDto) {
+    public UserResponseDto createUser(UserDto userDto) {
         User user = User.builder()
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
@@ -40,13 +45,12 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .role(Role.USER)
                 .build();
-
         userRepository.save(user);
-        return user;
+        return convertUserToDto(userRepository.save(user));
     }
 
     @Override
-    public User updateUser(Long id, UserDto userDto) {
+    public UserResponseDto updateUser(Long id, UserDto userDto) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(id)
         );
@@ -54,8 +58,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        userRepository.save(user);
-        return user;
+        return convertUserToDto(userRepository.save(user));
     }
 
     @Override
@@ -65,5 +68,15 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new UserNotFoundException(id);
         }
+    }
+
+    private static UserResponseDto convertUserToDto(User user) {
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .createdAt(user.getCreatedAt())
+                .build();
     }
 }
