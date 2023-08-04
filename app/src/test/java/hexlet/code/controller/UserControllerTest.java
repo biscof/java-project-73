@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DataSet("users.yml")
-@DBUnit(schema = "public")
+@DBUnit(schema = "task_manager")
 class UserControllerTest {
 
     @Autowired

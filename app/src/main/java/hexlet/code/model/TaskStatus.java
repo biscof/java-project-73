@@ -15,7 +15,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "statuses")
+@Table(name = "statuses", schema = "task_manager")
 @Getter
 @Setter
 @NoArgsConstructor

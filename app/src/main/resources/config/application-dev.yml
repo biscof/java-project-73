@@ -5,7 +5,7 @@ server:
 
 spring:
   datasource:
-    url: "jdbc:h2:./task-manager-app-db"
+    url: "jdbc:h2:./task-manager-app-db;INIT=CREATE SCHEMA IF NOT EXISTS task_manager"
     username:
     password:
     driver-class-name: org.h2.Driver
