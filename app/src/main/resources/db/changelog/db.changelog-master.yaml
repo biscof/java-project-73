@@ -30,3 +30,23 @@ databaseChangeLog:
               - column:
                   name: created_at
                   type: timestamp
+  - changeSet:
+      id: 2
+      author:  maksimbutakov
+      changes:
+        - createTable:
+            tableName:  statuses
+            columns:
+              - column:
+                  name:  id
+                  type:  bigint
+                  autoIncrement:  true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              -  column:
+                   name:  name
+                   type:  varchar(255)
+              - column:
+                  name: created_at
+                  type: timestamp

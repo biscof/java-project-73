@@ -54,6 +54,8 @@ public class WebSecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, baseUrl + "/users").permitAll()
                                 .requestMatchers(HttpMethod.POST, baseUrl + "/login").permitAll()
                                 .requestMatchers(HttpMethod.GET, baseUrl + "/users").permitAll()
+                                .requestMatchers(HttpMethod.GET, baseUrl + "/statuses/*").permitAll()
+                                .requestMatchers(HttpMethod.GET, baseUrl + "/statuses").permitAll()
                                 .requestMatchers(
                                         new NegatedRequestMatcher(
                                                 new AntPathRequestMatcher(baseUrl + "/**"))).permitAll()
@@ -91,6 +93,7 @@ public class WebSecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    // Checks whether the authenticated user has the same ID as they are claiming to operate on.
     private boolean hasSelfId(HttpServletRequest request) {
         String[] uriItems = request.getRequestURI().split("/");
         Long idClaim = Long.parseLong(uriItems[uriItems.length - 1]);
