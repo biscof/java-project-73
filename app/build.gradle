@@ -15,9 +15,6 @@ version = '0.0.1-SNAPSHOT'
 
 application {
     mainClass = 'hexlet.code.App'
-    run {
-        environment 'JWT_SECRET', System.getenv('JWT_SECRET')
-    }
 }
 
 java {
@@ -121,6 +118,11 @@ liquibase {
 testlogger {
     showStandardStreams = true
 }
+
+run {
+    systemProperty 'JWT_SECRET', System.getenv('JWT_SECRET')
+}
+
 
 // Сборка фронтенда.
 // Выполняется только если ничего не изменилось.
