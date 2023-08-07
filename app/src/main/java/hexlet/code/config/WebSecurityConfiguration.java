@@ -1,8 +1,11 @@
 package hexlet.code.config;
 
 import hexlet.code.filter.JwtAuthenticationFilter;
+import hexlet.code.model.Task;
 import hexlet.code.model.User;
+import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
+import hexlet.code.service.TaskServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,8 +39,11 @@ public class WebSecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     public final UserDetailsService userDetailsService;
+    public final TaskServiceImpl taskService;
     public final UserRepository userRepository;
+    public final TaskRepository taskRepository;
     public final ApplicationContext applicationContext;
+
 
     @Value("${base-url}")
     private String baseUrl;
@@ -56,6 +62,8 @@ public class WebSecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, baseUrl + "/users").permitAll()
                                 .requestMatchers(HttpMethod.GET, baseUrl + "/statuses/*").permitAll()
                                 .requestMatchers(HttpMethod.GET, baseUrl + "/statuses").permitAll()
+                                .requestMatchers(HttpMethod.GET, baseUrl + "/tasks/*").permitAll()
+                                .requestMatchers(HttpMethod.GET, baseUrl + "/tasks").permitAll()
                                 .requestMatchers(
                                         new NegatedRequestMatcher(
                                                 new AntPathRequestMatcher(baseUrl + "/**"))).permitAll()
@@ -65,6 +73,9 @@ public class WebSecurityConfiguration {
                                 .requestMatchers(HttpMethod.PUT, baseUrl + "/users/*")
                                 .access((authentication, context) ->
                                         new AuthorizationDecision(hasSelfId(context.getRequest())))
+                                .requestMatchers(HttpMethod.DELETE, baseUrl + "/tasks/*")
+                                .access((authentication, context) ->
+                                        new AuthorizationDecision(isAuthor(context.getRequest())))
                                 .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
@@ -101,6 +112,28 @@ public class WebSecurityConfiguration {
         if (request.getUserPrincipal() != null) {
             Optional<User> user = userRepository.findUserByEmail(request.getUserPrincipal().getName());
             return user.isPresent() && user.get().getId().equals(idClaim);
+        } else {
+            return false;
+        }
+    }
+
+    // Checks whether the currently authenticated user is the author of the task.
+    private boolean isAuthor(HttpServletRequest request) {
+        String[] uriItems = request.getRequestURI().split("/");
+        Long taskId = Long.parseLong(uriItems[uriItems.length - 1]);
+
+        Optional<Task> task = taskRepository.findTaskById(taskId);
+        if (task.isEmpty()) {
+            return false;
+        }
+
+        Long taskAuthorId = task.get().getAuthor().getId();
+
+        if (request.getUserPrincipal() != null) {
+            String username = request.getUserPrincipal().getName();
+            Optional<User> currentUser = userRepository.findUserByEmail(username);
+            return currentUser.isPresent()
+                    && currentUser.get().getId().equals(taskAuthorId);
         } else {
             return false;
         }
