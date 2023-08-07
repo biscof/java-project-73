@@ -50,3 +50,50 @@ databaseChangeLog:
               - column:
                   name: created_at
                   type: timestamp
+  - changeSet:
+      id: 3
+      author:  maksimbutakov
+      changes:
+        - createTable:
+            tableName:  tasks
+            columns:
+              - column:
+                  name:  id
+                  type:  bigint
+                  autoIncrement:  true
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              -  column:
+                   name:  name
+                   type:  varchar(255)
+                   constraints:
+                     nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: task_status_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_task_status
+                    references: statuses(id)
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_author
+                    references: users(id)
+              - column:
+                  name: executor_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_executor
+                    references: users(id)
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
