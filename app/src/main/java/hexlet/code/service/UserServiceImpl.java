@@ -2,6 +2,7 @@ package hexlet.code.service;
 
 import hexlet.code.dto.UserDto;
 import hexlet.code.dto.UserResponseDto;
+import hexlet.code.exception.DeletionException;
 import hexlet.code.exception.UserNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.model.Role;
@@ -10,7 +11,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +28,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(id)
         );
-        return convertUserToDto(userRepository.save(user));
+        return convertUserToDto(user);
     }
 
     @Override
@@ -44,6 +47,8 @@ public class UserServiceImpl implements UserService {
                 .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .role(Role.USER)
+                .tasksAuthored(new ArrayList<>())
+                .tasksToDo(new ArrayList<>())
                 .build();
         userRepository.save(user);
         return convertUserToDto(userRepository.save(user));
@@ -63,10 +68,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        if (userRepository.findById(id).isPresent()) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(id);
+        }
+
+        boolean hasNoAssociatedTasks = user.get().getTasksToDo().isEmpty() && user.get().getTasksAuthored().isEmpty();
+
+        if (hasNoAssociatedTasks) {
             userRepository.deleteById(id);
         } else {
-            throw new UserNotFoundException(id);
+            throw new DeletionException("Cannot delete user because there are tasks associated with this user.");
         }
     }
 

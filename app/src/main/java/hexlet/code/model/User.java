@@ -1,6 +1,6 @@
 package hexlet.code.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -26,6 +28,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"password", "role", "tasksAuthored", "tasksToDo"})
 public class User {
 
     @Id
@@ -39,7 +42,6 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    @JsonIgnore
     private String password;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -48,4 +50,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "author")
+    private List<Task> tasksAuthored;
+
+    @OneToMany(mappedBy = "executor")
+    private List<Task> tasksToDo;
 }

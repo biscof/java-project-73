@@ -1,13 +1,16 @@
 package hexlet.code.service;
 
 import hexlet.code.dto.TaskStatusDto;
+import hexlet.code.exception.DeletionException;
 import hexlet.code.exception.TaskStatusNotFoundException;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.repository.TaskStatusRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +23,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
         TaskStatus taskStatus = taskStatusRepository.findById(id).orElseThrow(
                 () -> new TaskStatusNotFoundException(id)
         );
-        return taskStatusRepository.save(taskStatus);
+        return taskStatus;
     }
 
     @Override
@@ -30,7 +33,11 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public TaskStatus createTaskStatus(TaskStatusDto taskStatusDto) {
-        return taskStatusRepository.save(new TaskStatus(taskStatusDto.getName()));
+        TaskStatus taskStatus = new TaskStatus(
+                taskStatusDto.getName(),
+                new ArrayList<>()
+        );
+        return taskStatusRepository.save(taskStatus);
     }
 
     @Override
@@ -44,10 +51,18 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public void deleteTaskStatus(Long id) {
-        if (taskStatusRepository.findById(id).isPresent()) {
+        Optional<TaskStatus> taskStatus = taskStatusRepository.findById(id);
+
+        if (taskStatus.isEmpty()) {
+            throw new TaskStatusNotFoundException(id);
+        }
+
+        boolean hasNoAssociatedTasks = taskStatus.get().getTasks().isEmpty();
+
+        if (hasNoAssociatedTasks) {
             taskStatusRepository.deleteById(id);
         } else {
-            throw new TaskStatusNotFoundException(id);
+            throw new DeletionException("Cannot delete task status because there are tasks associated with it.");
         }
     }
 }

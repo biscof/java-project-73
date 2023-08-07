@@ -1,7 +1,7 @@
 package hexlet.code.controller;
 
 import hexlet.code.dto.TaskStatusDto;
-import hexlet.code.exception.InvalidDataException;
+import hexlet.code.exception.DeletionException;
 import hexlet.code.exception.TaskStatusNotFoundException;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.service.TaskStatusServiceImpl;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -45,8 +44,7 @@ public class TaskStatusController {
     }
 
     @PostMapping(path = "")
-    @ResponseStatus(HttpStatus.CREATED)
-    public TaskStatus createTaskStatus(
+    public ResponseEntity<Object> createTaskStatus(
             @Validated @RequestBody TaskStatusDto taskStatusDto,
             BindingResult bindingResult
     ) {
@@ -54,10 +52,12 @@ public class TaskStatusController {
             List<String> errorMessages = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toList();
-            throw new InvalidDataException(errorMessages);
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(errorMessages);
         }
 
-        return taskStatusService.createTaskStatus(taskStatusDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(taskStatusService.createTaskStatus(taskStatusDto));
     }
 
     @PutMapping(path = "/{id}")
@@ -73,8 +73,14 @@ public class TaskStatusController {
         try {
             taskStatusService.deleteTaskStatus(id);
             return ResponseEntity.ok().build();
-        } catch (TaskStatusNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (RuntimeException e) {
+            if (e instanceof TaskStatusNotFoundException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            } else if (e instanceof DeletionException) {
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(e.getMessage());
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred.");
+            }
         }
     }
 }

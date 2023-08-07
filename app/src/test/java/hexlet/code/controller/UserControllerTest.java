@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
+import hexlet.code.TestUtils;
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
+import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.JwtService;
 import hexlet.code.service.UserDetailsServiceImpl;
@@ -51,6 +53,12 @@ class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private TestUtils testUtils;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -164,5 +172,23 @@ class UserControllerTest {
                 .andExpect(status().isOk());
 
         assertTrue(userRepository.findUserByEmail("fischer@test.com").isEmpty());
+    }
+
+    @Test
+    void testDeleteUserWithTasks() throws Exception {
+        testUtils.setUp();
+        User user = userRepository.findUserByEmail("smirnov@mail.com").orElseThrow();
+        user.getTasksToDo().add(taskRepository.findTaskByName("Fix bugs").orElseThrow());
+        userRepository.save(user);
+
+        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("smirnov@mail.com"));
+
+        MockHttpServletResponse response = mockMvc.perform(delete("/api/users/" + user.getId())
+                        .header("Authorization", "Bearer " + jwt))
+                .andReturn()
+                .getResponse();
+
+        assertEquals(422, response.getStatus());
+        assertTrue(response.getContentAsString().contains("Cannot delete user"));
     }
 }
