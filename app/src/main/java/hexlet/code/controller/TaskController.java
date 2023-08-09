@@ -6,6 +6,7 @@ import hexlet.code.model.Task;
 import hexlet.code.service.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import com.querydsl.core.types.Predicate;
 
 @RestController
 @RequestMapping("${base-url}/tasks")
@@ -38,8 +40,8 @@ public class TaskController {
     }
 
     @GetMapping(path = "")
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    public List<Task> getTasks(@QuerydslPredicate(root = Task.class) Predicate predicate) {
+        return taskService.getTasks(predicate);
     }
 
     @PostMapping(path = "")

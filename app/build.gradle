@@ -32,7 +32,11 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor (
+            'org.projectlombok:lombok',
+            'com.querydsl:querydsl-apt:5.0.0:jakarta',
+            'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    )
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -48,7 +52,8 @@ dependencies {
             'org.liquibase:liquibase-core',
             'org.springframework.data:spring-data-jpa',
             'org.thymeleaf.extras:thymeleaf-extras-springsecurity6',
-            'org.springframework.integration:spring-integration-core:6.0.3'
+            'org.springframework.integration:spring-integration-core:6.0.3',
+            'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     )
 
     liquibaseRuntime (

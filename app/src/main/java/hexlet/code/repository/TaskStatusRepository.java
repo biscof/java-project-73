@@ -1,13 +1,13 @@
 package hexlet.code.repository;
 
 import hexlet.code.model.TaskStatus;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface TaskStatusRepository extends CrudRepository<TaskStatus, Long> {
+public interface TaskStatusRepository extends JpaRepository<TaskStatus, Long> {
     Optional<TaskStatus> findTaskStatusById(Long id);
 
     Optional<TaskStatus> findTaskStatusByName(String name);

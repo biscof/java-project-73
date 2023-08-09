@@ -4,12 +4,13 @@ import hexlet.code.dto.TaskDto;
 import hexlet.code.model.Task;
 
 import java.util.List;
+import com.querydsl.core.types.Predicate;
 
 public interface TaskService {
 
     Task getTaskById(Long id);
 
-    List<Task> getAllTasks();
+    List<Task> getTasks(Predicate predicate);
 
     Task createTask(TaskDto taskDto);
 

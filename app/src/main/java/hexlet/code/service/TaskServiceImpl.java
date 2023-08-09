@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import com.querydsl.core.types.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,8 +38,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        return (List<Task>) taskRepository.findAll();
+    public List<Task> getTasks(Predicate predicate) {
+        if (predicate != null) {
+            return (List<Task>) taskRepository.findAll(predicate);
+        } else {
+            return taskRepository.findAll();
+        }
     }
 
     @Override
