@@ -2,6 +2,7 @@ package hexlet.code.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,9 +26,8 @@ import java.util.List;
 @NoArgsConstructor
 public class TaskStatus {
 
-    public TaskStatus(String name, List<Task> tasks) {
+    public TaskStatus(String name) {
         this.name = name;
-        this.tasks = tasks;
     }
 
     @Id
@@ -40,6 +41,6 @@ public class TaskStatus {
     private Date createdAt;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "taskStatus")
-    private List<Task> tasks;
+    @OneToMany(mappedBy = "taskStatus", fetch = FetchType.LAZY)
+    private List<Task> tasks = new ArrayList<>();
 }

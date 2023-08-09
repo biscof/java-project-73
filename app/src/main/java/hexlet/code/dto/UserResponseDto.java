@@ -5,9 +5,6 @@ import lombok.Data;
 
 import java.util.Date;
 
-/*
-Class which hides all the UserDetails stuff of a User
- */
 @Data
 @Builder
 public class UserResponseDto {

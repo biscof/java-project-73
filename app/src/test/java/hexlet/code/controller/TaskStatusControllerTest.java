@@ -44,11 +44,12 @@ class TaskStatusControllerTest {
     private TaskStatusRepository taskStatusRepository;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String BASE_TEST_URL = "/api/statuses";
 
     @Test
     void testGetAllTaskStatuses() throws Exception {
         MockHttpServletResponse response = mockMvc
-                .perform(get("/api/statuses"))
+                .perform(get(BASE_TEST_URL))
                 .andReturn()
                 .getResponse();
 
@@ -64,7 +65,7 @@ class TaskStatusControllerTest {
         TaskStatus expectedTaskStatus = taskStatusRepository.findTaskStatusByName("Completed").orElseThrow();
 
         MockHttpServletResponse response = mockMvc
-                .perform(get("/api/statuses/" + expectedTaskStatus.getId()))
+                .perform(get(BASE_TEST_URL + "/" + expectedTaskStatus.getId()))
                 .andReturn()
                 .getResponse();
 
@@ -76,8 +77,9 @@ class TaskStatusControllerTest {
 
     @Test
     void testGetTaskStatusByInvalidId() throws Exception {
+        long invalidId = -1L;
         MockHttpServletResponse response = mockMvc
-                .perform(get("/api/statuses/9"))
+                .perform(get(BASE_TEST_URL + "/" + invalidId))
                 .andReturn()
                 .getResponse();
 
@@ -89,7 +91,7 @@ class TaskStatusControllerTest {
     void testCreateTaskStatusValidData() throws Exception {
         TaskStatusDto taskStatusDto = new TaskStatusDto("Postponed");
 
-        mockMvc.perform(post("/api/statuses")
+        mockMvc.perform(post(BASE_TEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(taskStatusDto)))
                 .andExpect(status().isCreated());
@@ -105,7 +107,7 @@ class TaskStatusControllerTest {
     void testCreateTaskStatusInvalidData() throws Exception {
         TaskStatusDto taskStatusDto = new TaskStatusDto("");
 
-        MockHttpServletResponse response = mockMvc.perform(post("/api/statuses")
+        MockHttpServletResponse response = mockMvc.perform(post(BASE_TEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(taskStatusDto)))
                 .andReturn()
@@ -119,7 +121,7 @@ class TaskStatusControllerTest {
     void testCreateTaskStatusUnauthenticated() throws Exception {
         TaskStatusDto taskStatusDto = new TaskStatusDto("Postponed");
 
-        mockMvc.perform(post("/api/statuses")
+        mockMvc.perform(post(BASE_TEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(taskStatusDto)))
                 .andExpect(status().is(403));
@@ -132,7 +134,7 @@ class TaskStatusControllerTest {
 
         TaskStatusDto taskStatusDto = new TaskStatusDto("In testing");
 
-        mockMvc.perform(put("/api/statuses/" + taskStatus.getId())
+        mockMvc.perform(put(BASE_TEST_URL + "/" + taskStatus.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(taskStatusDto)))
                 .andExpect(status().isOk());
@@ -145,7 +147,7 @@ class TaskStatusControllerTest {
     void testDeleteTaskStatus() throws Exception {
         TaskStatus taskStatus = taskStatusRepository.findTaskStatusByName("Completed").orElseThrow();
 
-        mockMvc.perform(delete("/api/statuses/" + taskStatus.getId()))
+        mockMvc.perform(delete(BASE_TEST_URL + "/" + taskStatus.getId()))
                 .andExpect(status().isOk());
 
         assertTrue(taskStatusRepository.findTaskStatusByName("Completed").isEmpty());
@@ -155,7 +157,7 @@ class TaskStatusControllerTest {
     void testDeleteTaskStatusUnauthenticated() throws Exception {
         TaskStatus taskStatus = taskStatusRepository.findTaskStatusByName("Completed").orElseThrow();
 
-        mockMvc.perform(delete("/api/statuses/" + taskStatus.getId()))
+        mockMvc.perform(delete(BASE_TEST_URL + "/" + taskStatus.getId()))
                 .andExpect(status().is(403));
     }
 }

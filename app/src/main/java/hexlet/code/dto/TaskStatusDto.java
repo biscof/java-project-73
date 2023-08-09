@@ -1,6 +1,6 @@
 package hexlet.code.dto;
 
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TaskStatusDto {
 
-    @Size(min = 1, message = "Status name must contain at least one character.")
+    @NotBlank(message = "Status name must contain at least one character.")
     private String name;
 }

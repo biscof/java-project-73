@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +19,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,8 +54,8 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "author")
-    private List<Task> tasksAuthored;
+    private List<Task> tasksAuthored = new ArrayList<>();
 
-    @OneToMany(mappedBy = "executor")
-    private List<Task> tasksToDo;
+    @OneToMany(mappedBy = "executor", fetch = FetchType.LAZY)
+    private List<Task> tasksToDo = new ArrayList<>();
 }

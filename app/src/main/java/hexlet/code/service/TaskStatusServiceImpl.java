@@ -8,7 +8,6 @@ import hexlet.code.repository.TaskStatusRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +32,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 
     @Override
     public TaskStatus createTaskStatus(TaskStatusDto taskStatusDto) {
-        TaskStatus taskStatus = new TaskStatus(
-                taskStatusDto.getName(),
-                new ArrayList<>()
-        );
+        TaskStatus taskStatus = new TaskStatus(taskStatusDto.getName());
         return taskStatusRepository.save(taskStatus);
     }
 

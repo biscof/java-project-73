@@ -28,14 +28,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(id)
         );
-        return convertUserToDto(user);
+        return convertUserToResponseDto(user);
     }
 
     @Override
     public List<UserResponseDto> getAllUsers() {
         List<User> users = (List<User>) userRepository.findAll();
         return users.stream()
-                .map(UserServiceImpl::convertUserToDto)
+                .map(UserServiceImpl::convertUserToResponseDto)
                 .toList();
     }
 
@@ -50,8 +50,7 @@ public class UserServiceImpl implements UserService {
                 .tasksAuthored(new ArrayList<>())
                 .tasksToDo(new ArrayList<>())
                 .build();
-        userRepository.save(user);
-        return convertUserToDto(userRepository.save(user));
+        return convertUserToResponseDto(userRepository.save(user));
     }
 
     @Override
@@ -63,7 +62,7 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userDto.getLastName());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        return convertUserToDto(userRepository.save(user));
+        return convertUserToResponseDto(userRepository.save(user));
     }
 
     @Override
@@ -83,7 +82,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private static UserResponseDto convertUserToDto(User user) {
+    private static UserResponseDto convertUserToResponseDto(User user) {
         return UserResponseDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
