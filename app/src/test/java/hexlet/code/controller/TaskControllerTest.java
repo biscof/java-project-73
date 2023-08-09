@@ -6,10 +6,9 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import hexlet.code.TestUtils;
 import hexlet.code.dto.TaskDto;
 import hexlet.code.model.Task;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
-import hexlet.code.repository.UserRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,10 +45,10 @@ class TaskControllerTest {
     private TaskRepository taskRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private TaskStatusRepository taskStatusRepository;
 
     @Autowired
-    private TaskStatusRepository taskStatusRepository;
+    private LabelRepository labelRepository;
 
     @Autowired
     private TestUtils testUtils;
@@ -61,11 +61,6 @@ class TaskControllerTest {
         testUtils.setUp();
     }
 
-    @AfterEach
-    public void cleanUp() {
-        testUtils.cleanUp();
-    }
-
     @Test
     void testGetAllTasks() throws Exception {
         MockHttpServletResponse response = mockMvc
@@ -76,7 +71,27 @@ class TaskControllerTest {
         List<Task> tasks = MAPPER.readValue(response.getContentAsString(), new TypeReference<>() { });
 
         assertEquals(200, response.getStatus());
+        assertEquals(2, tasks.size());
+    }
+
+    @Test
+    void testGetTasksByParams() throws Exception {
+        Long taskStatusId = taskStatusRepository.findTaskStatusByName("Cancelled").orElseThrow().getId();
+        Long labelId = labelRepository.findLabelByName("review").orElseThrow().getId();
+
+        MockHttpServletResponse response = mockMvc
+                .perform(get(String.format("%s?taskStatus=%d&labelsId=%d", BASE_TEST_URL, taskStatusId, labelId)))
+                .andReturn()
+                .getResponse();
+
+        List<Task> tasks = MAPPER.readValue(response.getContentAsString(), new TypeReference<>() { });
+
+        assertEquals(200, response.getStatus());
         assertEquals(1, tasks.size());
+        assertTrue(response.getContentAsString().contains("ivanov@mail.com"));
+        assertTrue(response.getContentAsString().contains("Fix bugs"));
+        assertFalse(response.getContentAsString().contains("moderate"));
+        assertFalse(response.getContentAsString().contains("Clean up text"));
     }
 
     @Test
@@ -93,7 +108,7 @@ class TaskControllerTest {
         assertEquals(200, response.getStatus());
         assertEquals("Fix bugs", actualTask.getName());
         assertEquals("ivanov@mail.com", actualTask.getAuthor().getEmail());
-        assertTrue(response.getContentAsString().contains("\"name\":\"New\""));
+        assertTrue(response.getContentAsString().contains("\"name\":\"Cancelled\""));
     }
 
     @Test

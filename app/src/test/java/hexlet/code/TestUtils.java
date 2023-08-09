@@ -32,6 +32,7 @@ public class TestUtils {
 
     public void setUp() {
         persistMockTask();
+        persistMockTask2();
     }
 
     public TaskDto createTaskDto() {
@@ -43,32 +44,32 @@ public class TestUtils {
         return taskDto;
     }
 
-    public User persistMockUser() {
+    public User persistMockUser(String email, String firstName, String lastName) {
         User user = new User();
-        user.setEmail("ivanov@mail.com");
+        user.setEmail(email);
         user.setPassword("12345");
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setRole(Role.USER);
         return userRepository.save(user);
     }
 
-    public TaskStatus persistMockTaskStatus() {
+    public TaskStatus persistMockTaskStatus(String name) {
         return taskStatusRepository.save(
-                new TaskStatus("New")
+                new TaskStatus(name)
         );
     }
 
-    public Label persistMockLabel() {
+    public Label persistMockLabel(String name) {
         return labelRepository.save(
-                new Label("review")
+                new Label(name)
         );
     }
 
     public void persistMockTask() {
-        User user = persistMockUser();
-        TaskStatus status = persistMockTaskStatus();
-        Label label = persistMockLabel();
+        User user = persistMockUser("ivanov@mail.com", "Ivan", "Ivanov");
+        TaskStatus status = persistMockTaskStatus("Cancelled");
+        Label label = persistMockLabel("review");
         Task task = taskRepository.save(
                 Task.builder()
                         .name("Fix bugs")
@@ -86,10 +87,23 @@ public class TestUtils {
         taskStatusRepository.save(status);
     }
 
-    public void cleanUp() {
-        taskRepository.deleteAll();
-        userRepository.deleteAll();
-        taskStatusRepository.deleteAll();
-        labelRepository.deleteAll();
+    public void persistMockTask2() {
+        User user = persistMockUser("john@johnson.com", "John", "Johnson");
+        TaskStatus status = persistMockTaskStatus("Updated");
+        Label label = persistMockLabel("moderate");
+        Task task = taskRepository.save(
+                Task.builder()
+                        .name("Clean up text")
+                        .author(user)
+                        .taskStatus(status)
+                        .labels(Set.of(label))
+                        .build()
+        );
+        label.getTasks().add(task);
+        labelRepository.save(label);
+        user.getTasksAuthored().add(task);
+        userRepository.save(user);
+        status.getTasks().add(task);
+        taskStatusRepository.save(status);
     }
 }

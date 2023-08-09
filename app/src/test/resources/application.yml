@@ -3,6 +3,9 @@ spring:
     url: "jdbc:h2:mem:db;INIT=CREATE SCHEMA IF NOT EXISTS task_manager"
     username:
     password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
