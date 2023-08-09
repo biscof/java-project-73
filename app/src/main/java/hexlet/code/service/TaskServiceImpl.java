@@ -1,10 +1,14 @@
 package hexlet.code.service;
 
 import hexlet.code.dto.TaskDto;
+import hexlet.code.exception.LabelNotFoundException;
 import hexlet.code.exception.TaskNotFoundException;
+import hexlet.code.exception.UserNotFoundException;
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -13,7 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +27,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
     private TaskStatusRepository taskStatusRepository;
     private UserRepository userRepository;
+    private LabelRepository labelRepository;
 
     @Override
     public Task getTaskById(Long id) {
@@ -41,11 +47,10 @@ public class TaskServiceImpl implements TaskService {
                 .name(taskDto.getName())
                 .description(taskDto.getDescription())
                 .author(getUserFromSecurityContext())
-                .taskStatus(getTaskStatus(taskDto))
+                .taskStatus(getTaskStatusFromDto(taskDto))
+                .executor(getExecutorFromDto(taskDto))
+                .labels(getLabelsFormDto(taskDto))
                 .build();
-
-        Optional<User> executor = userRepository.findUserById(taskDto.getExecutorId());
-        executor.ifPresent(task::setExecutor);
 
         return taskRepository.save(task);
     }
@@ -57,10 +62,10 @@ public class TaskServiceImpl implements TaskService {
         );
         task.setName(taskDto.getName());
         task.setDescription(taskDto.getDescription());
-        task.setTaskStatus(getTaskStatus(taskDto));
+        task.setTaskStatus(getTaskStatusFromDto(taskDto));
+        task.setExecutor(getExecutorFromDto(taskDto));
+        task.setLabels(getLabelsFormDto(taskDto));
 
-        Optional<User> executor = userRepository.findUserById(taskDto.getExecutorId());
-        executor.ifPresent(task::setExecutor);
         return taskRepository.save(task);
     }
 
@@ -82,9 +87,34 @@ public class TaskServiceImpl implements TaskService {
         return userRepository.findUserByEmail(principal.getUsername()).orElseThrow();
     }
 
-    private TaskStatus getTaskStatus(TaskDto taskDto) {
+    private TaskStatus getTaskStatusFromDto(TaskDto taskDto) {
         return taskStatusRepository
                 .findTaskStatusById(taskDto.getTaskStatusId())
                 .orElseThrow(() -> new TaskNotFoundException(taskDto.getTaskStatusId()));
+    }
+
+    private User getExecutorFromDto(TaskDto taskDto) {
+        Long executorId = taskDto.getExecutorId();
+        if (executorId != null) {
+            return userRepository
+                    .findUserById(executorId)
+                    .orElseThrow(() -> new UserNotFoundException(executorId));
+        } else {
+            return null;
+        }
+    }
+
+    private Set<Label> getLabelsFormDto(TaskDto taskDto) {
+        Set<Long> labelIds = taskDto.getLabelIds();
+        if (labelIds != null) {
+            return labelIds.stream()
+                    .map(id -> labelRepository
+                            .findLabelById(id)
+                            .orElseThrow(() -> new LabelNotFoundException(id))
+                    )
+                    .collect(Collectors.toSet());
+        } else {
+            return null;
+        }
     }
 }
