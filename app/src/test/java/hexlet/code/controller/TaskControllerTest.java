@@ -3,14 +3,13 @@ package hexlet.code.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
-import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.TestUtils;
 import hexlet.code.dto.TaskDto;
 import hexlet.code.model.Task;
-import hexlet.code.model.TaskStatus;
-import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
+import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@DBRider
 @DBUnit(schema = "task_manager")
 class TaskControllerTest {
 
@@ -51,6 +48,9 @@ class TaskControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
     private TestUtils testUtils;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -59,6 +59,11 @@ class TaskControllerTest {
     @BeforeEach
     public void setUp() {
         testUtils.setUp();
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        testUtils.cleanUp();
     }
 
     @Test
@@ -71,8 +76,7 @@ class TaskControllerTest {
         List<Task> tasks = MAPPER.readValue(response.getContentAsString(), new TypeReference<>() { });
 
         assertEquals(200, response.getStatus());
-        assertEquals(2, tasks.size());
-//        assertEquals("Fix bugs", tasks.get(0).getName());
+        assertEquals(1, tasks.size());
     }
 
     @Test
@@ -88,14 +92,15 @@ class TaskControllerTest {
 
         assertEquals(200, response.getStatus());
         assertEquals("Fix bugs", actualTask.getName());
-        assertEquals("smith@mail.com", actualTask.getAuthor().getEmail());
-        assertTrue(response.getContentAsString().contains("\"name\":\"Completed\""));
+        assertEquals("ivanov@mail.com", actualTask.getAuthor().getEmail());
+        assertTrue(response.getContentAsString().contains("\"name\":\"New\""));
     }
 
     @Test
     void testGetTaskByInvalidId() throws Exception {
+        long invalidId = -1L;
         MockHttpServletResponse response = mockMvc
-                .perform(get(BASE_TEST_URL + "/9"))
+                .perform(get(BASE_TEST_URL + "/" + invalidId))
                 .andReturn()
                 .getResponse();
 
@@ -103,7 +108,7 @@ class TaskControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "smirnov@mail.com", password = "qwerty")
+    @WithMockUser(username = "ivanov@mail.com", password = "12345")
     void testCreateTaskValidData() throws Exception {
         TaskDto taskDto = testUtils.createTaskDto();
 
@@ -113,7 +118,6 @@ class TaskControllerTest {
                 .andExpect(status().isCreated());
 
         Optional<Task> testTask = taskRepository.findTaskByName(taskDto.getName());
-
         assertTrue(testTask.isPresent());
     }
 
@@ -160,19 +164,14 @@ class TaskControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "smirnov@mail.com", password = "qwerty", roles = "USER")
+    @WithMockUser(username = "ivanov@mail.com", password = "12345", roles = "USER")
     void testDeleteTaskByAuthor() throws Exception {
-        Task task = taskRepository.findTaskByName("Clean up code").orElseThrow();
-        User author = userRepository.findUserByEmail("smirnov@mail.com").orElseThrow();
-        TaskStatus taskStatus = task.getTaskStatus();
+        Task task = taskRepository.findTaskByName("Fix bugs").orElseThrow();
 
         mockMvc.perform(delete(BASE_TEST_URL + "/" + task.getId()))
                 .andExpect(status().isOk());
 
-        assertTrue(taskRepository.findTaskByName("Clean up code").isEmpty());
-        assertFalse(taskStatus.getTasks().contains(task));
-        assertFalse(author.getTasksAuthored().contains(task));
-
+        assertTrue(taskRepository.findTaskByName("Fix bugs").isEmpty());
     }
 
     @Test

@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,11 +62,12 @@ class UserControllerTest {
     private TestUtils testUtils;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String BASE_TEST_URL = "/api/users";
 
     @Test
     void testGetAllUsers() throws Exception {
         MockHttpServletResponse response = mockMvc
-                .perform(get("/api/users"))
+                .perform(get(BASE_TEST_URL))
                 .andReturn()
                 .getResponse();
 
@@ -73,18 +75,18 @@ class UserControllerTest {
 
         assertEquals(200, response.getStatus());
         assertEquals(3, users.size());
-        assertEquals("John", users.get(0).getFirstName());
-        assertEquals("petrov@test.com", users.get(1).getEmail());
-        assertEquals("Fischer", users.get(2).getLastName());
+        assertEquals("Jane", users.get(0).getFirstName());
+        assertEquals("dupont@test.com", users.get(1).getEmail());
+        assertEquals("Mustermann", users.get(2).getLastName());
     }
 
     @Test
     void testGetUserByValidId() throws Exception {
-        User user = userRepository.findUserByEmail("smith@test.com").orElseThrow();
-        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("smith@test.com"));
+        User user = userRepository.findUserByEmail("doe@test.com").orElseThrow();
+        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("doe@test.com"));
 
         MockHttpServletResponse response = mockMvc
-                .perform(get("/api/users/" + user.getId())
+                .perform(get(BASE_TEST_URL + "/" + user.getId())
                         .header("Authorization", "Bearer " + jwt))
                 .andReturn()
                 .getResponse();
@@ -92,15 +94,16 @@ class UserControllerTest {
         User testUser = MAPPER.readValue(response.getContentAsString(), new TypeReference<>() { });
 
         assertEquals(200, response.getStatus());
-        assertEquals("smith@test.com", testUser.getEmail());
-        assertEquals("John", testUser.getFirstName());
+        assertEquals("doe@test.com", testUser.getEmail());
+        assertEquals("Jane", testUser.getFirstName());
         assertFalse(response.getContentAsString().contains("$2a$12$8W9aoZQaU6jAP2"));
     }
 
     @Test
     void testGetUserByInvalidId() throws Exception {
+        long invalidId = -1L;
         MockHttpServletResponse response = mockMvc
-                .perform(get("/api/users/9"))
+                .perform(get(BASE_TEST_URL + "/" + invalidId))
                 .andReturn()
                 .getResponse();
 
@@ -113,7 +116,7 @@ class UserControllerTest {
                 "Eric", "Johnson", "johnson@test.com", "jUi43#Pn@"
         );
 
-        mockMvc.perform(post("/api/users")
+        mockMvc.perform(post(BASE_TEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(userDto)))
                 .andExpect(status().isCreated());
@@ -131,7 +134,7 @@ class UserControllerTest {
                 "", "Erikson", "@te.c", "jUi43#Pn@"
         );
 
-        MockHttpServletResponse response = mockMvc.perform(post("/api/users")
+        MockHttpServletResponse response = mockMvc.perform(post(BASE_TEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(userDto)))
                 .andReturn()
@@ -144,47 +147,43 @@ class UserControllerTest {
 
     @Test
     void testUpdateUser() throws Exception {
-        User user = userRepository.findUserByEmail("petrov@test.com").orElseThrow();
-        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("petrov@test.com"));
+        User user = userRepository.findUserByEmail("doe@test.com").orElseThrow();
+        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("doe@test.com"));
 
         UserDto userDto = new UserDto(
-                "Yuri", "Petrov", "yuri@test.com", "or&uuTyN<eC"
+                "Olga", "Ivanova", "ivanova@mail.com", "or&uuTyN<eC"
         );
 
-        mockMvc.perform(put("/api/users/" + user.getId())
+        mockMvc.perform(put(BASE_TEST_URL + "/" + user.getId())
                         .header("Authorization", "Bearer " + jwt)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(userDto)))
                 .andExpect(status().isOk());
 
-        assertEquals("Yuri", user.getFirstName());
-        assertEquals("Petrov", user.getLastName());
+        assertEquals("Olga", user.getFirstName());
+        assertEquals("Ivanova", user.getLastName());
         assertNotEquals("oW&uTyN<eC", user.getPassword());
     }
 
     @Test
     void testDeleteUser() throws Exception {
-        User user = userRepository.findUserByEmail("fischer@test.com").orElseThrow();
-        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("fischer@test.com"));
+        User user = userRepository.findUserByEmail("mustermann@test.com").orElseThrow();
+        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("mustermann@test.com"));
 
-        mockMvc.perform(delete("/api/users/" + user.getId())
+        mockMvc.perform(delete(BASE_TEST_URL + "/" + user.getId())
                         .header("Authorization", "Bearer " + jwt))
                 .andExpect(status().isOk());
 
-        assertTrue(userRepository.findUserByEmail("fischer@test.com").isEmpty());
+        assertTrue(userRepository.findUserByEmail("mustermann@test.com").isEmpty());
     }
 
     @Test
+    @WithMockUser(username = "ivanov@mail.com", password = "12345")
     void testDeleteUserWithTasks() throws Exception {
         testUtils.setUp();
-        User user = userRepository.findUserByEmail("smirnov@mail.com").orElseThrow();
-        user.getTasksToDo().add(taskRepository.findTaskByName("Fix bugs").orElseThrow());
-        userRepository.save(user);
+        User user = userRepository.findUserByEmail("ivanov@mail.com").orElseThrow();
 
-        String jwt = jwtService.generateToken(userDetailsService.loadUserByUsername("smirnov@mail.com"));
-
-        MockHttpServletResponse response = mockMvc.perform(delete("/api/users/" + user.getId())
-                        .header("Authorization", "Bearer " + jwt))
+        MockHttpServletResponse response = mockMvc.perform(delete(BASE_TEST_URL + "/" + user.getId()))
                 .andReturn()
                 .getResponse();
 
