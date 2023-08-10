@@ -6,4 +6,10 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/3229c3b950c4c63bfdbb/maintainability)](https://codeclimate.com/github/biscof/java-project-73/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/3229c3b950c4c63bfdbb/test_coverage)](https://codeclimate.com/github/biscof/java-project-73/test_coverage)
 
-Demo: https://task-manager-app-km58.onrender.com
+### Live Demo
+
+Access the demo: [Live Demo](https://task-manager-app-km58.onrender.com).
+
+### API Documentation
+
+Find the detailed API documentation [here](https://task-manager-app-km58.onrender.com/swagger.html).
