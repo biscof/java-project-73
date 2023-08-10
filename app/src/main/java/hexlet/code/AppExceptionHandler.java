@@ -2,7 +2,7 @@ package hexlet.code;
 
 import hexlet.code.exception.InvalidDataException;
 import hexlet.code.exception.UserNotFoundException;
-import hexlet.code.model.ErrorResponse;
+import hexlet.code.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,7 +16,7 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException exception) {
-        ErrorResponse response = new ErrorResponse(
+        ErrorResponseDto response = new ErrorResponseDto(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND,
                 exception.getMessage()
@@ -26,8 +26,8 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(InvalidDataException.class)
     public ResponseEntity<Object> handleInvalidDataException(InvalidDataException exception) {
-        List<ErrorResponse> response = exception.getMessages().stream()
-                .map(message -> new ErrorResponse(
+        List<ErrorResponseDto> response = exception.getMessages().stream()
+                .map(message -> new ErrorResponseDto(
                         LocalDateTime.now(),
                         HttpStatus.UNPROCESSABLE_ENTITY,
                         message))
