@@ -8,6 +8,7 @@ plugins {
     id 'org.liquibase.gradle' version '2.2.0'
     id 'com.adarshr.test-logger' version '3.0.0'
     id 'org.siouan.frontend-jdk11' version '6.0.0'
+    id 'org.springdoc.openapi-gradle-plugin' version '1.6.0'
 }
 
 group = 'hexlet.code'
@@ -53,7 +54,8 @@ dependencies {
             'org.springframework.data:spring-data-jpa',
             'org.thymeleaf.extras:thymeleaf-extras-springsecurity6',
             'org.springframework.integration:spring-integration-core:6.0.3',
-            'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+            'com.querydsl:querydsl-jpa:5.0.0:jakarta',
+            'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
     )
 
     liquibaseRuntime (
@@ -118,6 +120,10 @@ liquibase {
                     '&hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy'
         }
     }
+}
+
+openApi {
+    apiDocsUrl.set("http://localhost:8080/v3/api-docs")
 }
 
 testlogger {

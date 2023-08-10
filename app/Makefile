@@ -6,6 +6,9 @@ prepare:
 build:
 	./gradlew clean build test checkstyleMain checkstyleTest
 
+make api-doc:
+	gradle clean generateOpenApiDocs
+
 report:
 	./gradlew jacocoTestReport
 

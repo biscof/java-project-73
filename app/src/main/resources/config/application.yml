@@ -19,4 +19,8 @@ spring:
       filter:
         enabled: true
 
+springdoc:
+  swagger-ui:
+    path: /swagger.html
+
 base-url: /api
