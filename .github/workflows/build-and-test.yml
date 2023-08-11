@@ -8,6 +8,7 @@ jobs:
 
     env:
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      ROLLBAR_TOKEN: ${{ secrets.ROLLBAR_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3
