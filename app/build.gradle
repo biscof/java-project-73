@@ -18,10 +18,6 @@ application {
     mainClass = 'hexlet.code.App'
 }
 
-java {
-    sourceCompatibility = '17'
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -86,8 +82,13 @@ test {
     finalizedBy jacocoTestReport
 }
 
+wrapper {
+    gradleVersion = '8.2'
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 compileJava {
-    options.release = 17
+    options.release = 20
     options.encoding = 'UTF-8'
 }
 
