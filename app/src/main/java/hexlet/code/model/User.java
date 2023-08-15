@@ -55,9 +55,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder.Default
     @OneToMany(mappedBy = "author")
     private List<Task> tasksAuthored = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "executor", fetch = FetchType.LAZY)
     private List<Task> tasksToDo = new ArrayList<>();
 }

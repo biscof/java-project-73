@@ -59,6 +59,7 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "label_id")
     )
     @JsonIgnore
+    @Builder.Default
     private Set<Label> labels = new HashSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
