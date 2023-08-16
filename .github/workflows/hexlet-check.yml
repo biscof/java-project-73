@@ -14,11 +14,12 @@ on:
 
 jobs:
   build:
-    env:
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      ROLLBAR_TOKEN: ${{ secrets.ROLLBAR_TOKEN }}
-
     runs-on: ubuntu-latest
+
+    env:
+      JWT_SECRET: "${{ secrets.JWT_SECRET }}"
+      ROLLBAR_TOKEN: "${{ secrets.ROLLBAR_TOKEN }}"
+
     steps:
       - uses: actions/checkout@v3
 
