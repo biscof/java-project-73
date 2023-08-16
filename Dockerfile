@@ -3,7 +3,7 @@ FROM eclipse-temurin:20-jdk
 ARG GRADLE_VERSION=8.2
 ENV GRADLE_HOME=/opt/gradle
 
-WORKDIR /app
+WORKDIR .
 
 COPY . .
 

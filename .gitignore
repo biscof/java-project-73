@@ -1,7 +1,7 @@
-app/HELP.md
-app/node
-app/fronetend/build
-app/frontend/node_modules
+HELP.md
+node
+fronetend/build
+frontend/node_modules
 
 .gradle
 build/
