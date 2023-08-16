@@ -12,3 +12,6 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     default-schema: task_manager
+
+jwt-secret: test-secret
+rollbar-token: test-token
