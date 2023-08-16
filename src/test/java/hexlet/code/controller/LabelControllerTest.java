@@ -38,11 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DBUnit(schema = "task_manager")
 class LabelControllerTest {
 
-    static {
-        System.setProperty("JWT_SECRET", "a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd");
-        System.setProperty("ROLLBAR_TOKEN", "903e6c0ede76926b7e6cf");
-    }
-
     @Autowired
     private MockMvc mockMvc;
 
