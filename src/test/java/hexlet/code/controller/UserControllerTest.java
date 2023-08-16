@@ -8,7 +8,6 @@ import com.github.database.rider.junit5.api.DBRider;
 import hexlet.code.TestUtils;
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
-import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.JwtService;
 import hexlet.code.service.UserDetailsServiceImpl;
@@ -43,6 +42,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DBUnit(schema = "task_manager")
 class UserControllerTest {
 
+    static {
+        System.setProperty("JWT_SECRET", "a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd");
+        System.setProperty("ROLLBAR_TOKEN", "903e6c0ede76926b7e6cf");
+    }
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -54,9 +58,6 @@ class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
 
     @Autowired
     private TestUtils testUtils;

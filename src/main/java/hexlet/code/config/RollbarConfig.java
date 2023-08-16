@@ -14,7 +14,7 @@ import org.springframework.core.env.Environment;
 @ComponentScan({ "hexlet.code", "com.rollbar.spring" })
 public class RollbarConfig {
 
-    @Value("${ROLLBAR_TOKEN}")
+    @Value("${rollbar-token}")
     private String rollbarToken;
 
     private final Environment environment;
