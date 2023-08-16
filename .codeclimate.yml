@@ -1,5 +1,5 @@
 exclude_patterns:
-  - "app/frontend"
+  - "frontend"
 #  default exclusions:
   - "config/"
   - "db/"
