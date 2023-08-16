@@ -160,4 +160,12 @@ class TaskStatusControllerTest {
         mockMvc.perform(delete(BASE_TEST_URL + "/" + taskStatus.getId()))
                 .andExpect(status().is(403));
     }
+
+    @Test
+    void testDeleteTaskStatusWithAssociatedTasks() throws Exception {
+        TaskStatus taskStatus = taskStatusRepository.findTaskStatusByName("Completed").orElseThrow();
+
+        mockMvc.perform(delete(BASE_TEST_URL + "/" + taskStatus.getId()))
+                .andExpect(status().is(403));
+    }
 }
