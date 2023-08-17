@@ -38,12 +38,11 @@ import java.util.Optional;
 public class WebSecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    public final UserDetailsService userDetailsService;
-    public final TaskServiceImpl taskService;
-    public final UserRepository userRepository;
-    public final TaskRepository taskRepository;
-    public final ApplicationContext applicationContext;
-
+    private final UserDetailsService userDetailsService;
+    private final TaskServiceImpl taskService;
+    private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
+    private final ApplicationContext applicationContext;
 
     @Value("${base-url}")
     private String baseUrl;
