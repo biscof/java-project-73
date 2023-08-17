@@ -25,4 +25,4 @@ springdoc:
 
 base-url: /api
 jwt-secret: "a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd"
-rollbar-token: "fc4ddc1cd17241559f8dc59f3d1bc19c"
+rollbar-token: "ff5b24320cfc4c93a8dfca7afc28de19"

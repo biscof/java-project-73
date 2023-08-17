@@ -39,10 +39,10 @@ public class RollbarConfig {
         } else {
             // If the active profile is other than "dev" or "prod" (say "test"),
             // then don't use Rollbar
-            return RollbarSpringConfigBuilder.withAccessToken(rollbarToken).build();
-//            return RollbarSpringConfigBuilder.withAccessToken(accessToken)
-//                    .environment(activeProfile)
-//                    .build();
+//            return RollbarSpringConfigBuilder.withAccessToken(rollbarToken).build();
+            return RollbarSpringConfigBuilder.withAccessToken(accessToken)
+                    .environment("dev")
+                    .build();
         }
     }
 }
