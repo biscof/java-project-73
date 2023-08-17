@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: taskManager
+  security:
+    user:
+      name: ${LOC_NAME}
+      password: ${LOC_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+#    default-schema: task_manager
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger.html
+
+base-url: /api
+jwt-secret: "a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd"
+rollbar-token: "903e6c0ede76926b7e6cf"

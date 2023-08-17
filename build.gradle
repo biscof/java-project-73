@@ -80,8 +80,8 @@ dependencies {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
-    systemProperty 'JWT_SECRET', "a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd"
-    systemProperty 'ROLLBAR_TOKEN', "903e6c0ede76926b7e6cf"
+//    systemProperty 'JWT_SECRET', "a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd"
+//    systemProperty 'ROLLBAR_TOKEN', "903e6c0ede76926b7e6cf"
 }
 
 wrapper {
