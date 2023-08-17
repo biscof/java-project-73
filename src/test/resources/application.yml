@@ -13,5 +13,3 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 #    default-schema: task_manager
-
-JWT_SECRET: a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd
