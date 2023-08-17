@@ -31,7 +31,8 @@ public class RollbarConfig {
 
     private Config getRollbarConfigs(String accessToken) {
         String activeProfile = environment.getProperty("spring.profiles.active");
-        if (activeProfile.equals("dev") || activeProfile.equals("prod")) {
+        if (activeProfile != null
+                && (activeProfile.equals("dev") || activeProfile.equals("prod"))) {
             return RollbarSpringConfigBuilder.withAccessToken(accessToken)
                     .environment(activeProfile)
                     .build();
