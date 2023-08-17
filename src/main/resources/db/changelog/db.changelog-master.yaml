@@ -1,11 +1,15 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 0
       author:  maksimbutakov
       changes:
         - sql:
-              dbms: postgresql
-              sql: CREATE SCHEMA IF NOT EXISTS task_manager;
+            dbms: postgresql
+            sql: CREATE SCHEMA IF NOT EXISTS task_manager;
+  - changeSet:
+      id: 1
+      author: maksimbutakov
+      changes:
         - createTable:
             tableName:  users
             columns:

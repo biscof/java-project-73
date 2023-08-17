@@ -118,17 +118,17 @@ dependencyManagement {
     }
 }
 
-liquibase {
-    activities {
-        main {
-            changelogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
-            url 'jdbc:h2:file:./task-manager-app-db'
-            referenceUrl 'hibernate:spring:hexlet.code.model.' +
-                    '?dialect=org.hibernate.dialect.H2Dialect' +
-                    '&hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy'
-        }
-    }
-}
+//liquibase {
+//    activities {
+//        main {
+//            changelogFile 'src/main/resources/db/changelog/db.changelog-master.yaml'
+//            url 'jdbc:h2:file:./task-manager-app-db'
+//            referenceUrl 'hibernate:spring:hexlet.code.model.' +
+//                    '?dialect=org.hibernate.dialect.H2Dialect' +
+//                    '&hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy'
+//        }
+//    }
+//}
 
 openApi {
     apiDocsUrl.set("http://localhost:8080/v3/api-docs")
