@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import com.querydsl.core.types.Predicate;
@@ -119,7 +120,7 @@ public class TaskServiceImpl implements TaskService {
                     )
                     .collect(Collectors.toSet());
         } else {
-            return null;
+            return new HashSet<>();
         }
     }
 }
