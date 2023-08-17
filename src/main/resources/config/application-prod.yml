@@ -3,6 +3,8 @@ server:
     include-stacktrace: never
 
 spring:
+  profiles:
+    active: prod
   devtools:
     restart:
       enabled: false
