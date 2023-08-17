@@ -3,6 +3,9 @@ databaseChangeLog:
       id: 1
       author:  maksimbutakov
       changes:
+        - sql:
+              dbms: postgresql
+              sql: CREATE SCHEMA IF NOT EXISTS task_manager;
         - createTable:
             tableName:  users
             columns:
