@@ -17,12 +17,12 @@ spring:
     show-sql: false
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    properties:
-      hibernate:
-        default_schema: task_manager
+#    properties:
+#      hibernate:
+#        default_schema: task_manager
     generate-ddl: true
-  liquibase:
-    default-schema: task_manager
+#  liquibase:
+#    default-schema: task_manager
 
 logging:
   level:

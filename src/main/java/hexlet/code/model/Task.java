@@ -24,7 +24,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tasks", schema = "task_manager")
+//@Table(name = "tasks", schema = "task_manager")
+@Table(name = "tasks")
 @Getter
 @Setter
 @Builder
