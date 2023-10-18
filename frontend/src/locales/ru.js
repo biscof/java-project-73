@@ -11,9 +11,8 @@ const ru = {
     login: 'Вход',
     signup: 'Регистрация',
     welcome: {
-      title: 'Привет от Хекслета!',
-      body: 'Практические курсы по программированию',
-      buttonText: 'Узнать Больше',
+      title: 'Task Manager',
+      body: 'Создавайте задачи и отслеживайте их выполнение.',
     },
     email: 'Email',
     password: 'Пароль',

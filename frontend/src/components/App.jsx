@@ -186,6 +186,7 @@ const App = () => {
       </div>
       <footer>
         <div className="container my-5 pt-4 border-top">
+          <span>Frontend by </span>
           <a rel="noreferrer" href="https://ru.hexlet.io">Hexlet</a>
         </div>
       </footer>
