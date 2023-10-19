@@ -1,21 +1,32 @@
 #Makefile
 
+clean:
+	./gradlew clean
+
 prepare:
 	./gradlew clean installDist
 
-build:
+build-and-check:
 	./gradlew clean build test checkstyleMain checkstyleTest
 
+docker-db-start:
+	docker-compose -f docker/docker-compose.yml up -d -V --remove-orphans
+
 make api-doc:
-	./gradlew clean generateOpenApiDocs
+	./gradlew generateOpenApiDocs
 
 report:
 	./gradlew jacocoTestReport
 
-start:
+run-dev:
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
-start-prod:
+run-dev-with-docker-db: docker-db-start run-dev
+
+run-prod:
 	./gradlew bootRun --args='--spring.profiles.active=prod'
+
+test:
+	./gradlew test
 
 .PHONY: build
