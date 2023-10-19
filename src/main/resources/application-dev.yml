@@ -4,25 +4,15 @@ server:
     include-message: on_param
 
 spring:
-#  profiles:
-#    active: dev
   datasource:
-#    url: "jdbc:h2:./task-manager-app-db;INIT=CREATE SCHEMA IF NOT EXISTS task_manager"
-    url: "jdbc:h2:./task-manager-app-db"
-    username:
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost:5432/task-manager
+    username: developer
+    password: password
+    driver-class-name: org.postgresql.Driver
   jpa:
+    hibernate:
+      ddl-auto: none
     show-sql: true
-    database: h2
-    database-platform: org.hibernate.dialect.H2Dialect
-  h2:
-    console:
-      enabled: true
-      # Path to open the h2 console in the browser
-      path: /h2console/
-      settings:
-        web-allow-others: true
 
 logging:
   level:
