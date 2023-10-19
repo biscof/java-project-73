@@ -1,4 +1,4 @@
-package hexlet.code.service;
+package hexlet.code.service.label;
 
 import hexlet.code.dto.LabelDto;
 import hexlet.code.exception.DeletionException;

@@ -26,7 +26,6 @@ import java.util.List;
 
 
 @Entity
-//@Table(name = "users", schema = "task_manager")
 @Table(name = "users")
 @Getter
 @Setter

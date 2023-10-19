@@ -1,4 +1,4 @@
-package hexlet.code.service;
+package hexlet.code.service.task;
 
 import hexlet.code.dto.TaskDto;
 import hexlet.code.exception.LabelNotFoundException;

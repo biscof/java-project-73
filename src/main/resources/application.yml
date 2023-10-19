@@ -24,5 +24,6 @@ springdoc:
     path: /swagger.html
 
 base-url: /api
-jwt-secret: a2adf6c0bfab10eeee2c44bb6819addc22b36d49b0633388622787af5d3461bd
-rollbar-token: 903e6c0ede76926b7e6cf
+# mock secret
+jwt-secret: 904c3afdffa4742c4d948656b688d45c830ff3d089686777607e5fa4956a6994
+#rollbar-token: ${ROLLBAR-TOKEN}

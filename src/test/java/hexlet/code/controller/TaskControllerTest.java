@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-//@DBUnit(schema = "task_manager")
 @DBUnit(schema = "public")
 class TaskControllerTest {
 

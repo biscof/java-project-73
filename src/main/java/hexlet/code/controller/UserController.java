@@ -1,10 +1,11 @@
 package hexlet.code.controller;
 
+import hexlet.code.controller.utils.ControllerUtils;
 import hexlet.code.dto.UserDto;
 import hexlet.code.dto.UserResponseDto;
 import hexlet.code.exception.DeletionException;
 import hexlet.code.exception.UserNotFoundException;
-import hexlet.code.service.UserServiceImpl;
+import hexlet.code.service.user.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

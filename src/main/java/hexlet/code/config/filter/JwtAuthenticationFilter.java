@@ -1,4 +1,4 @@
-package hexlet.code.filter;
+package hexlet.code.config.filter;
 
 import hexlet.code.service.JwtService;
 import jakarta.servlet.FilterChain;

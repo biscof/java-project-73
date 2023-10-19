@@ -1,10 +1,11 @@
 package hexlet.code.controller;
 
 import com.querydsl.core.types.Predicate;
+import hexlet.code.controller.utils.ControllerUtils;
 import hexlet.code.dto.TaskDto;
 import hexlet.code.exception.TaskNotFoundException;
 import hexlet.code.model.Task;
-import hexlet.code.service.TaskServiceImpl;
+import hexlet.code.service.task.TaskServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

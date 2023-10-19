@@ -3,8 +3,6 @@ server:
     include-stacktrace: never
 
 spring:
-#  profiles:
-#    active: prod
   devtools:
     restart:
       enabled: false
@@ -17,17 +15,9 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: false
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#    properties:
-#      hibernate:
-#        default_schema: task_manager
-    generate-ddl: true
-#  liquibase:
-#    default-schema: task_manager
 
 logging:
   level:
     root: INFO
 
-
+jwt-secret: ${JWT-SECRET}

@@ -1,6 +1,7 @@
 package hexlet.code.service;
 
 import hexlet.code.dto.LoginDto;
+import hexlet.code.service.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-//@Table(name = "statuses", schema = "task_manager")
 @Table(name = "statuses")
 @Getter
 @Setter

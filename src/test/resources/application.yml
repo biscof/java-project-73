@@ -2,7 +2,6 @@ spring:
   profiles:
     active: test
   datasource:
-#    url: "jdbc:h2:mem:db;INIT=CREATE SCHEMA IF NOT EXISTS task_manager"
     url: "jdbc:h2:mem:db"
     username:
     password:
@@ -12,4 +11,8 @@ spring:
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
-#    default-schema: task_manager
+
+base-url: /api
+# mock secret
+jwt-secret: 904c3afdffa4742c4d948656b688d45c830ff3d089686777607e5fa4956a6994
+

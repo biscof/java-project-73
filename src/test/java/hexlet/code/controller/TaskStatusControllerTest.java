@@ -34,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DataSet("statuses.yml")
-//@DBUnit(schema = "task_manager")
 @DBUnit(schema = "public")
 class TaskStatusControllerTest {
 

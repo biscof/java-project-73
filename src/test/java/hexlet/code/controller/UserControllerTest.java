@@ -10,7 +10,7 @@ import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.JwtService;
-import hexlet.code.service.UserDetailsServiceImpl;
+import hexlet.code.service.user.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,7 +39,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DataSet("users.yml")
-//@DBUnit(schema = "task_manager")
 @DBUnit(schema = "public")
 class UserControllerTest {
 

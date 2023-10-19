@@ -35,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @DBRider
 @DataSet({"labels.yml", "users.yml", "statuses.yml"})
-//@DBUnit(schema = "task_manager")
 @DBUnit(schema = "public")
 class LabelControllerTest {
 

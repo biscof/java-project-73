@@ -1,10 +1,11 @@
 package hexlet.code.controller;
 
+import hexlet.code.controller.utils.ControllerUtils;
 import hexlet.code.dto.TaskStatusDto;
 import hexlet.code.exception.DeletionException;
 import hexlet.code.exception.TaskStatusNotFoundException;
 import hexlet.code.model.TaskStatus;
-import hexlet.code.service.TaskStatusServiceImpl;
+import hexlet.code.service.status.TaskStatusServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

@@ -1,10 +1,11 @@
 package hexlet.code.controller;
 
+import hexlet.code.controller.utils.ControllerUtils;
 import hexlet.code.dto.LabelDto;
 import hexlet.code.exception.DeletionException;
 import hexlet.code.exception.LabelNotFoundException;
 import hexlet.code.model.Label;
-import hexlet.code.service.LabelServiceImpl;
+import hexlet.code.service.label.LabelServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

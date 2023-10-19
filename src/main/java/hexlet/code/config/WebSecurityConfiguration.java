@@ -1,11 +1,11 @@
 package hexlet.code.config;
 
-import hexlet.code.filter.JwtAuthenticationFilter;
+import hexlet.code.config.filter.JwtAuthenticationFilter;
 import hexlet.code.model.Task;
 import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.UserRepository;
-import hexlet.code.service.TaskServiceImpl;
+import hexlet.code.service.task.TaskServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
